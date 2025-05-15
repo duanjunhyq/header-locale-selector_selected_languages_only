@@ -7,9 +7,12 @@ import { isTesting } from "discourse-common/config/environment";
 
 export default class LocaleSelector extends Component {
   @service currentUser;
+  @service siteSettings;
 
   get availableLocales() {
-    return JSON.parse(this.siteSettings.available_locales);
+    const allLocales = JSON.parse(this.siteSettings.available_locales);
+    // Filter to only allow English (en) and French (fr)
+    return allLocales.filter(locale => ["en", "fr"].includes(locale.value));
   }
 
   @action
@@ -24,7 +27,7 @@ export default class LocaleSelector extends Component {
       }
     });
   }
-
+  
   defaultItem() {
     const currentUserLocale = document.documentElement
       .getAttribute("lang")
